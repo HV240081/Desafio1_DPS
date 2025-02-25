@@ -1,4 +1,5 @@
 //Archivo que se encarga de representa una mesa interactiva (disponible/ocupada).
+"use client";
 import React from 'react';
 
 const Mesa = (props) => {

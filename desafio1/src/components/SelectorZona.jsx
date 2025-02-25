@@ -1,4 +1,6 @@
 //Archivo que se encarga de permitir elegir entre diferentes áreas del restaurante (Terraza, Interior, VIP).
+"use client";
+
 import React, { useState } from 'react';
 
 const SelectorZona = () => {

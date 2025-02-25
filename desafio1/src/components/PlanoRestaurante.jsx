@@ -1,4 +1,5 @@
 //El código realiza la función de renderiza la distribución de mesas.
+"use client";
 
 import React from 'react';
 import styles from '../app/page.module.css';

@@ -1,4 +1,4 @@
-//Codigo que muestra el estado de la mesa, sea Reservada / Disponible
+//Codigo que actualiza el estado de la mesa, sea Reservada / Disponible
 "use client";
 
 import { useState } from 'react';

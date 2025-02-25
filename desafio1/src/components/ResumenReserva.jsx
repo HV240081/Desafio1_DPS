@@ -1,4 +1,5 @@
 //El código realiza la función de mostrar los detalles de la reserva
+"use client";
 
 import React from 'react';
 
