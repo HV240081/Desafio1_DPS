@@ -1,95 +1,67 @@
-import Image from "next/image";
+//El código realiza la función de ver lo que se ha creado en cada uno de los componentes
+//Además contiene código que se encuarga de la validación del programa para mejor uso
+"use client";
+
 import styles from "./page.module.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import PlanoRestaurante from "../components/PlanoRestaurante";
+import ResumenReserva from "../components/ResumenReserva";
+import SelectorZona from "../components/SelectorZona";
+import CantidadPersona from "../Global/CantidadPersona";
+import DisponibilidadMesa from "../Global/DisponibilidadMesa";
+import Estadomesa from "../Global/Estadomesa";
+import { useState } from 'react';
 
-export default function Home() {
+export default function Validaciones() {
+  const [cantidadPersonas, setCantidadPersonas] = useState(0);
+  const [reservas, setReservas] = useState({});
+  const [mostrarResumen, setMostrarResumen] = useState(false);
+  const [mesasReservadas, setMesasReservadas] = useState([]);
+  const [mesaSeleccionada, setMesaSeleccionada] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleCantidadChange = (cantidad) => {
+    if (cantidad >= 0 && cantidad <= 4) {
+      setCantidadPersonas(cantidad);
+    } else {
+      setError("El número de personas debe estar entre 0 y 4.");
+    }
+  };
+
+  const handleReservarMesa = (mesaId) => {
+    if (mesasReservadas.includes(mesaId)) {
+      setError("Esta mesa ya está reservada.");
+      return;
+    }
+
+    setReservas((prevReservas) => ({...prevReservas,[mesaId]: { personas: cantidadPersonas },}));
+    setMesasReservadas((prevMesas) => [...prevMesas, mesaId]);
+    setMostrarResumen(true);
+    setMesaSeleccionada(mesaId);
+    setError(null);
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <main className={styles.main}>
+      <div className="Page">
+        <div>
+          <h1>Bienvenido a Restaurante UDB</h1>
+          <br></br>
+          <p>Tipos de mesas que ofrecemos en base al ID:</p>
+          <SelectorZona />{error && <p style={{ color: 'red' }}>{error}</p>}
+          <br></br>
+          <p>Seleccione una mesa:</p>
+          <PlanoRestaurante mesasReservadas={mesasReservadas} mesaSeleccionada={mesaSeleccionada} onMesaSeleccionada={setMesaSeleccionada}/>
+          {mesaSeleccionada && <CantidadPersona mesaId={mesaSeleccionada} onCantidadChange={handleCantidadChange} />}
+          <DisponibilidadMesa mesaID={1} disponibleInicial={true} />
+          <Estadomesa mesaID={1} onReservar={handleReservarMesa} />
+          {mostrarResumen && (
+            <div>
+              <ResumenReserva reservas={reservas} />
+            </div>
+          )}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }
